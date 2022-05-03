@@ -1,6 +1,6 @@
 import React from "react";
 
-export const App = ({ questions, answers }) => {
+export const App = ({ questions, answers, handleModify}) => {
   <div>
     <h1>Q & A tool</h1>
   </div>;
@@ -16,6 +16,8 @@ export const App = ({ questions, answers }) => {
               <div key={answerId}>
                 <span>
                   {content} - {upvotes}
+                  <button onClick={() => handleModify(answerId, 1)}> + </button>
+                  <button onClick={() => handleModify(answerId, -1)}> - </button>
                 </span>
               </div>
             ))}
