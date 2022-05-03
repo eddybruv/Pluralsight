@@ -3,6 +3,7 @@ import express from "express";
 import { readFileSync } from "fs";
 import { renderToString } from "react-dom/server";
 import { App } from "../client/App";
+import { handleModify } from "../shared/utility";
 
 const data = {
   question: [
@@ -46,13 +47,21 @@ const app = new express();
 
 app.use(express.static("dist"));
 
-app.get("/data")
+app.get("/data", async(_req, res) => {
+  res.json(data);
+})
 
 app.get("/", (_req, res) => {
   const index = readFileSync(`public/index.html`, "utf8");
   const rendered = renderToString(<App {...data}/>);
   res.send(index.replace("{{rendered}}", rendered));
 });
+
+app.get('/vote/:answerId', (req, res) => {
+  const {query, params} =  req;
+  data.answers = handleModify(data.answers, params.answerId, +query.increment);
+  res.send('OK');
+})
 
 app.listen(7777);
 console.log("Server is listening");
